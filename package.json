@@ -40,13 +40,11 @@
     "cortex": {
         "dependencies": {
             "jquery": "~1.9.2",
-            "class": "~0.1.0",
-            "lang": "~0.1.0"
+            "class": "~0.1.0"
         },
         "exactDependencies": {
             "jquery": "1.9.2",
-            "class": "0.1.0",
-            "lang": "0.1.0"
+            "class": "0.1.0"
         }
     }
 }
