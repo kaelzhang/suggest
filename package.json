@@ -9,7 +9,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git://code.dianpingoa.com/neurons/suggest.git"
+        "url": "git@github.com:kaelzhang/suggest.git"
     },
     "bugs": {
         "url": ""
