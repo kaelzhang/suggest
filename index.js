@@ -114,7 +114,6 @@ var Suggest = suggest.Suggest = Class({
     }
 
     var up;
-
     switch (e.keyCode) {
       // left
       case 37:
@@ -171,7 +170,6 @@ var Suggest = suggest.Suggest = Class({
           keyword: keyword,
           data: data
         });
-        this._bindHover(item, i);
 
         items = items.add(item);
       }, this);
@@ -183,29 +181,6 @@ var Suggest = suggest.Suggest = Class({
     // reset index
     this.selectedIndex = -1;
     this.emit('render');
-  },
-
-  _bindHover: function (item, i) {
-    var cls = this.get('itemActiveClass');
-    var self = this;
-
-    item.on({
-      mouseenter: function () {
-        var selected = this.selectedIndex;
-
-        if (~selected) {
-          self.items.eq(selected).removeClass(cls);
-        }
-        item.addClass(cls);
-      },
-
-      mouseleave: function () {
-        item.removeClass(cls);
-        if (~selected) {
-          self.items.eq(selected).addClass(cls);
-        }
-      }
-    });
   },
 
   show: function() {
