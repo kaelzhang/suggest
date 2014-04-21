@@ -272,3 +272,4 @@ var Suggest = suggest.Suggest = Class({
   // container to append panel into
   panelContainer: {}
 });
+
