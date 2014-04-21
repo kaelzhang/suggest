@@ -1,36 +1,12 @@
 'use strict';
 
-/**
- * @module  suggest
- * @author  Jiayi.Xu, Kael
- * @description 表单提示的基础控件，处理获取数据并显示提示等最简单的事情。具体业务需求尤其发展出来。
- */
 
-// Todo: 
-//  1.由于打算支持各种事件，打算还是改写成Class -- done
-//  2.把preselect时的内容填写到input上的逻辑抽离出来，或写成简单的配置 -- done，抽离出来
-//  3.考虑如何在ul内容render的时候添加额外的东西 
-
-// 不负责定位，由具体的业务组建，只负责ul的显示隐藏，鼠标键盘事件， 
-
-
-// Change log:
-// - 2012-2-10: 修改take方法，value参数与上次相同则不重新生成html
-// - 2012-4-24: 移除reset方法，preselect及select方法增加支持传index作为参数，由input自己阻止冒泡
-
-// - 2013-07-18  Kael: 
-//      - remove `isCommand` method
-//      - refractor all functionalities, no more deal with business requirements
-//      - migrate to cortex 2.0
-//      - migrate to class 2.0, use attributes to santitize the logic about options
+module.exports = suggest;
 
 var Class = require('class');
 var $ = require('jquery');
 
-var WIN = window;
-var DOC = WIN.document;
-
-module.exports = suggest;
+var DOC = window.document;
 
 function suggest(input, options) {
   return new Suggest(input, options);
@@ -195,9 +171,10 @@ var Suggest = suggest.Suggest = Class({
           keyword: keyword,
           data: data
         });
+        this._bindHover(item, i);
 
         items = items.add(item);
-      });
+      }, this);
 
       this.items = items;
       items = null;
@@ -206,6 +183,29 @@ var Suggest = suggest.Suggest = Class({
     // reset index
     this.selectedIndex = -1;
     this.emit('render');
+  },
+
+  _bindHover: function (item, i) {
+    var cls = this.get('itemActiveClass');
+    var self = this;
+
+    item.on({
+      mouseenter: function () {
+        var selected = this.selectedIndex;
+
+        if (~selected) {
+          self.items.eq(selected).removeClass(cls);
+        }
+        item.addClass(cls);
+      },
+
+      mouseleave: function () {
+        item.removeClass(cls);
+        if (~selected) {
+          self.items.eq(selected).addClass(cls);
+        }
+      }
+    });
   },
 
   show: function() {
