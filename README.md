@@ -1,66 +1,70 @@
 # suggest
 
-> The best project ever.
+Search suggestion.
 
-## Getting Started
-Before anything taking its part, you should install [node](http://nodejs.org) and "cortex".
+- `suggest` doesn't care about ajax requests which you should 
 
-#### Install Node
+## Installation
 
-Visit [http://nodejs.org](http://nodejs.org), download and install the proper version of nodejs.
+```bash
+cortex install suggest --save
+```
 
-#### Install Cortex
+## Usage
 
-    # maybe you should use `sudo`
-    npm install -g cortex
+### aaa
 
-## Using suggest In Your Project
+```js
+var suggest = require('suggest');
+var s = suggest(input)
+	.on('select', function(e){
+		console.log(e.data);
+	});
 
-First, install 'suggest' directly with `ctx install` (recommended)
+```
+
+
+## Programmatical APIs
+
+### suggest(input, options)
+
+Returns a new `suggest.Suggest` instance.
+
+#### Class: suggest.Suggest(input, options)
+
+- input `DOMElement` Suggest input
+- options `Object` Suggest options
+	- panel `(Selector|DOMElement)=` The panel which contains suggestion results. If not specified, `suggest` will create a panel for you.
+	- itemSelector `Selector` The CSS selector to find result items.
+	- itemWrapper `Selector|DOMElement` The `DOMElement` or CSS selector to wrap
+	- itemRenderer `function(data)`
+	- itemActiveClass `string` 
+	- panelContainer `(Selector|DOMElement)=`
 	
-	ctx install suggest --save
+#### .render(keyword, results)
+
+#### Event: preselect
+
+- data `Object`
+	- data: `Object`
+	- index: `number`
+	- keyword: `string`
+	- element: `DOMElement`
+
+#### Event: select
+
+- data `Object` The same as `preselect` event.
 	
-or, you could update your package.json manually
-    
-    dependencies: {
-        'suggest': '<version-you-want>'
-    }
-    
-and install dependencies
+This event is emitted when user press enter on the selected item or after executing method `.select()`
 	
-	ctx install
-    
-Then, use `require` method in your module
-    
-    var suggest = require('suggest');
-    
-Finally, start cortex server
-    
-    ctx server
-    
-Then cortex will care all the rest.
+#### Event: render
 
+This event is emitted after executing method `.show()`.
 
-## API Documentation
+#### Event: show
 
-### suggest: constructor
-': constructor' means the `module.exports` of module 'suggest' is a constructor that we should use it with the `new` keyword
+Emitted after executing method `.show()`.
 
-	new suggest(options)
-	
-#### options
-- options.name {String}
+#### Event: hide
 
-
-
-### suggest.\<method-name\>(arguments)
-Means this is a static method of `module.exports`
-
-#### arguments
-// arguments description here
-
-### .\<method-name\>(arguments)
-Mean this is a method of the instance
-
-#### arguments
-// arguments description here
+Emitted after executing method `.hide()`.

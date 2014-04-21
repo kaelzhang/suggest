@@ -45,7 +45,7 @@ var Suggest = suggest.Suggest = Class({
         var self = this;
 
         // maintain sequence
-        ['panel', 'itemWrapper'].forEach(function(key) {
+        ['panelContainer', 'panel', 'itemWrapper'].forEach(function(key) {
             self.set(key, options[key]);
             delete options[key];
         });
@@ -57,8 +57,8 @@ var Suggest = suggest.Suggest = Class({
         this.hide();
 
         var item_selector = this.get('itemSelector');
+
         this.panel
-            .appendTo( this.get('container') )
             .on({
                 mouseenter: function(e) {
                     self.preselect($(this));
@@ -67,7 +67,7 @@ var Suggest = suggest.Suggest = Class({
                 click: function(e){
                     self.select($(this));
                 }
-
+            // Event delegate
             }, item_selector);
 
         $(DOC.body).on('click', function(e) {
@@ -220,11 +220,25 @@ var Suggest = suggest.Suggest = Class({
     panel: {
         // @param {string|DOMElement|$} v
         setter: function(v) {
+            var isNew;
+
             if(v){
                 this.panel = $(v).eq(0);
 
             }else{
                 this.panel = $('<ul class="suggest-panel">');
+                isNew = true;
+            }
+
+            var container = this.get('panelContainer');
+
+            if (container) {
+              this.panel.appendTo(container);
+
+            } else {
+              if (isNew) {
+                this.panel.appendTo(document.body);
+              }
             }
         }
     },
@@ -275,10 +289,6 @@ var Suggest = suggest.Suggest = Class({
     },
 
     // container to append panel into
-    container: {
-        getter: function(v) {
-            return v || document.body;
-        }
-    }
+    panelContainer: {}
 });
 
