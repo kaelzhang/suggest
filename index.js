@@ -36,7 +36,7 @@ function suggest(input, options) {
     return new Suggest(input, options);  
 };
 
-var Suggest = Class({
+var Suggest = suggest.Suggest = Class({
 
     Implements: 'attrs events',
     initialize: function (input, options) {
@@ -54,9 +54,7 @@ var Suggest = Class({
         this.set(options);
 
         this.selectedIndex = -1;
-
-        this.cache = {};
-        this.close();
+        this.hide();
 
         var item_selector = this.get('itemSelector');
         this.panel
@@ -73,7 +71,7 @@ var Suggest = Class({
             }, item_selector);
 
         $(DOC.body).on('click', function(e) {
-            self.close();
+            self.hide();
         });
 
         this.input.on({
@@ -111,7 +109,7 @@ var Suggest = Class({
 
         this.selectedIndex = index;
 
-        this.fire('preselect', {
+        this.emit('preselect', {
             data    : data,
             index   : index,
             keyword : li.data('keyword'),
@@ -125,7 +123,7 @@ var Suggest = Class({
             li = this.items.eq(li);
         }
 
-        this.fire('select', {
+        this.emit('select', {
             data    : li.data('data'),
             index   : li.data('index'),
             keyword : li.data('keyword'),
@@ -171,25 +169,11 @@ var Suggest = Class({
     // - text: {string} 
     // - html: {string} if specified, 
     // - 
-    render: function (keyword, arr, nocache) {
+    render: function (keyword, arr) {
         var wrapper = this.wrapper;
         var renderer = this.get('itemRenderer');
-        var use_cache = this.get('cache');
-    
-        // if the old value,just show it
-        if (this.keyword === keyword && use_cache) {
-            return;
-        }
 
-        if (use_cache) {
-            this.keyword = keyword;
-            this.cache[keyword] = arr;
-        }
-
-        if (!arr.length) { // no data , then close it
-            this.close();
-
-        } else { // or has data, render it 
+        if (arr.length) {
             wrapper.empty();
 
             // create empty item set
@@ -215,33 +199,25 @@ var Suggest = Class({
 
         // reset index
         this.selectedIndex = -1;
-
-        this.fire('render');
-    },
-
-    clearCache: function() {
-        for(var key in this.cache){
-            delete this.cache[key];
-        }
+        this.emit('render');
     },
 
     show: function () {
         this.panel.css('visibility', 'visible');
         this.visible = true;
-        this.fire('show');
+        this.emit('show');
     },
 
-    close: function () {
+    hide: function () {
         this.panel.css('visibility', 'hidden');
         this.visible = false;
-        this.fire('close');
+        this.emit('close');
     }
 
 }, {
 
     // suggest panel
     panel: {
-
         // @param {string|DOMElement|$} v
         setter: function(v) {
             if(v){
@@ -251,10 +227,6 @@ var Suggest = Class({
                 this.panel = $('<ul class="suggest-panel">');
             }
         }
-    },
-
-    cache: {
-        value: true
     },
 
     itemSelector: {
@@ -310,5 +282,3 @@ var Suggest = Class({
     }
 });
 
-
-suggest.Suggest = Suggest;
